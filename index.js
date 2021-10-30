@@ -27,6 +27,13 @@ async function run() {
           res.json(result)
       })
 
+      // post single package data 
+      app.post('/packages' , async(req,res)=>{
+          const data = req.body;
+          const result = await allPackages.insertOne(data);
+          res.json(result)
+      })
+
       // get single packages data
       app.get('/packages/:id',async(req,res)=>{
           const id =req.params.id;
@@ -42,6 +49,13 @@ async function run() {
           res.json(result)
       })
 
+      // get all ordered package daga
+      app.get('/orderPackages', async(req,res)=>{
+          const query={};
+          const result= await allOrderPackages.find(query).toArray()
+          res.json(result)
+      })
+
     //   get a single user all order packages
       app.get('/orderPackages/:email', async (req,res)=>{
           const email = req.params.email;
@@ -49,6 +63,18 @@ async function run() {
           const result = await allOrderPackages.find(query).toArray()
           res.json(result)
       })
+
+      // update order package data (aproved status)
+         app.put('/orderPackages/:id' , async (req,res)=>{
+           const id=req.params.id;
+           const filter= {_id:ObjectId(id)}
+           const updateDoc = {$set:{
+                status:'aproved',
+           }};
+           const options = { upsert: true };
+           const result = await allOrderPackages.updateOne(filter, updateDoc, options);
+           res.json(result)
+         })
 
       // delete a single order package
       app.delete('/orderPackages/:id', async (req,res)=>{
