@@ -35,12 +35,28 @@ async function run() {
           res.json(result)
       })
 
-    //   post package booking details on db
+    //   post package booking requist  on db
       app.post('/orderPackages', async ( req,res)=>{
           const data =req.body;
           const result = await allOrderPackages.insertOne(data);
           res.json(result)
       })
+
+    //   get a single user all order packages
+      app.get('/orderPackages/:email', async (req,res)=>{
+          const email = req.params.email;
+          const query = { email:{ $in:[email]}}
+          const result = await allOrderPackages.find(query).toArray()
+          res.json(result)
+      })
+
+      // delete a single order package
+      app.delete('/orderPackages/:id', async (req,res)=>{
+        const id = req.params.id;
+        const query = {_id:ObjectId(id)}
+        const result = await allOrderPackages.deleteOne(query)
+        res.json(result)
+    })
 
       
     } finally {
