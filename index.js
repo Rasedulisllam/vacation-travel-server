@@ -41,6 +41,13 @@ async function run() {
           const result= await allPackages.findOne(query);
           res.json(result)
       })
+      // delete single packages data
+      app.delete('/packages/:id',async(req,res)=>{
+          const id =req.params.id;
+          const query={_id:ObjectId(id)}
+          const result= await allPackages.deleteOne(query)
+          res.json(result)
+      })
 
     //   post package booking requist  on db
       app.post('/orderPackages', async ( req,res)=>{
