@@ -20,6 +20,7 @@ async function run() {
       const database = client.db("vacationTravel");
       const allPackages = database.collection("packages");
       const allOrderPackages = database.collection("orderPackages");
+      const allpopularDestination= database.collection("popularDestination");
 
       // get all packages data
       app.get('/packages',async(req,res)=>{
@@ -41,6 +42,30 @@ async function run() {
           const result= await allPackages.findOne(query);
           res.json(result)
       })
+
+      // delete single packages data
+      app.put('/packages/:id',async(req,res)=>{
+          const id =req.params.id;
+          const data=req.body
+          const filter={_id:ObjectId(id)}
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: {
+              name:data.name,
+              location:data.location,
+              details:data.details,
+              img:data.img,
+              price:data.price,
+              rating:data.rating,
+              days:data.days,
+              review:data.review,
+              sale:data.sale,
+            },
+          };
+          const result = await allPackages.updateOne(filter, updateDoc, options);
+          res.json(result)
+      })
+
       // delete single packages data
       app.delete('/packages/:id',async(req,res)=>{
           const id =req.params.id;
@@ -90,6 +115,13 @@ async function run() {
         const result = await allOrderPackages.deleteOne(query)
         res.json(result)
     })
+
+    // get all popular destination data
+      app.get('/popularDestination', async(req,res)=>{
+        const query={};
+        const result= await allpopularDestination.find(query).toArray()
+        res.json(result)
+      })
 
       
     } finally {
